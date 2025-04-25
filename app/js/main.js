@@ -6,18 +6,30 @@ const badgeDescriptions = {
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
   bsideskc25: "BSidesKC 2025 badge: Available after the event"
 };
+// Map of badge to manifest URLs (pointing to S3)
+const manifestUrls = {
+  basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/manifest.json",
+  cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
+  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json"
+};
+
+const badgeImages = {
+  basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/badge.jpg",
+  cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
+  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg"
+};
 
 badgeSelect.addEventListener('change', () => {
   const selected = badgeSelect.value;
 
   if (selected) {
-    badgeImage.src = `/firmware/${selected}/badge.jpg`;
+    badgeImage.src = badgeImages[selected];
     badgeImage.style.display = 'block';
 
     badgeDescription.innerText = badgeDescriptions[selected] || "";
     badgeDescription.style.display = 'block';
 
-    flashButton.manifest = `/firmware/${selected}/manifest.json`;
+    flashButton.manifest = manifestUrls[selected];
     flashButton.style.display = 'inline-block';
   } else {
     badgeImage.style.display = 'none';
