@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  badge-flasher:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./firmware:/usr/share/nginx/html/firmware

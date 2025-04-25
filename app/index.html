@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Badge Firmware Flasher</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <h1>Badge Firmware Updater</h1>
+
+  <label for="badgeSelect">Select Badge:</label>
+  <select id="badgeSelect">
+    <option value="">-- Choose Badge --</option>
+    <option value="cactuscon2025">CactusCon 2025</option>
+    <option value="bsideskc25">BSidesKC 25</option>
+  </select>
+
+  <div id="badgePreview">
+    <img id="badgeImage" src="" alt="Badge Image" style="display: none;" />
+  </div>
+
+  <esp-web-install-button id="flashButton" style="display: none;"></esp-web-install-button>
+
+  <script type="module" src="https://unpkg.com/esp-web-tools@9.0.3/dist/web/install-button.js?module"></script>
+</body>
+</html>
