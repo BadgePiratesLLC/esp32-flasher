@@ -3,6 +3,6 @@ services:
   badge-flasher:
     build: .
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./firmware:/usr/share/nginx/html/firmware
