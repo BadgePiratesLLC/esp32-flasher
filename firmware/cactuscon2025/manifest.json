@@ -5,7 +5,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "firmware.bin", "offset": 0x10000 }
+        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/CactusCon/firmware.bin", "offset": 0x10000 }
       ]
     }
   ]

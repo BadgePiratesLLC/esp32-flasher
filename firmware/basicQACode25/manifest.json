@@ -1,0 +1,12 @@
+{
+  "name": "2025 Base QA Code",
+  "version": "1.0.0",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "https://bpotaupdates.s3.us-east-1.amazonaws.com/firmware.bin", "offset": 0x10000 }
+      ]
+    }
+  ]
+}
