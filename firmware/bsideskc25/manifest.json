@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "builds": [
     {
-      "chipFamily": "ESP32",
+      "chipFamily": "ESP32-S3",
       "parts": [
-        { "path": "firmware.bin", "offset": 0x10000 }
+        {
+          "path": "http://localhost:8080/firmware/bsideskc25/firmware.bin",
+          "offset": 65536
+        }
       ]
     }
   ]

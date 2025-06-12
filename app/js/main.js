@@ -6,17 +6,21 @@ const badgeDescriptions = {
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
   bsideskc25: "BSidesKC 2025 badge: Available after the event"
 };
-// Map of badge to manifest URLs (pointing to S3)
+// Dynamically build URLs based on environment config
+const baseUrl = window.APP_CONFIG?.BASE_URL || '/firmware';
+const imageUrl = window.APP_CONFIG?.IMAGE_URL || '/firmware';
+const env = window.APP_CONFIG?.ENV || 'local';
+
 const manifestUrls = {
-  basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/manifest.json",
-  cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
-  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json"
+  basicQACode25: `${baseUrl}/basicQACode25/manifest.json`,
+  cactuscon2025: `${baseUrl}/cactuscon2025/manifest.json`,
+  bsideskc25: `${baseUrl}/bsideskc25/manifest.json`
 };
 
 const badgeImages = {
-  basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/badge.jpg",
-  cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
-  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg"
+  basicQACode25: `${imageUrl}/basicQACode25/badge.jpg`,
+  cactuscon2025: `${imageUrl}/cactuscon2025/badge.jpg`,
+  bsideskc25: `${imageUrl}/bsideskc25/badge.jpg`
 };
 
 badgeSelect.addEventListener('change', () => {
