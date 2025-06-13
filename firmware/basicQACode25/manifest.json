@@ -5,7 +5,9 @@
     {
       "chipFamily": "ESP32-S3",
       "parts": [
-        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/basicQACode25/firmware.bin", "offset": 65536 }
+        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/basicQACode25/firmware.bin",
+        "offset": 65536
+        }
       ]
     }
   ]
