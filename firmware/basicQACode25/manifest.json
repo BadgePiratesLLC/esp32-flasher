@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "builds": [
     {
-      "chipFamily": "ESP32",
+      "chipFamily": "ESP32-S3",
       "parts": [
-        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/basicQACode25/firmware.bin", "offset": 0x10000 }
+        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/basicQACode25/firmware.bin", "offset": 65536‎ }
       ]
     }
   ]
