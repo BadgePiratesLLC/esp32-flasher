@@ -8,22 +8,34 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
-  <h1>Badge Firmware Updater</h1>
+  <header class="pirate-header">
+    <div class="pirate-logo">🏴‍☠️</div>
+    <h1>BadgePirates</h1>
+    <p class="subtitle">We make badges for fun and no profit</p>
+  </header>
 
-  <label for="badgeSelect">Select Badge:</label>
-  <select id="badgeSelect">
-    <option value="">-- Choose Badge --</option>
-    <option value="basicQACode25">2025 Basic QA Code</option>
-    <option value="cactuscon2025">CactusCon 2025</option>
-    <option value="bsideskc25">BSidesKC 25</option>
-  </select>
+  <main>
+    <div class="badge-card">
+      <label for="badgeSelect">Select Badge:</label>
+      <select id="badgeSelect">
+        <option value="">-- Choose Badge --</option>
+        <option value="basicQACode25">2025 Basic QA Code</option>
+        <option value="cactuscon2025">CactusCon 2025</option>
+        <option value="bsideskc25">BSidesKC 25</option>
+      </select>
 
-  <div id="badgePreview">
-    <img id="badgeImage" src="" alt="Badge Image" style="display: none;" />
-    <p id="badgeDescription" style="display: none;"></p>
-  </div>
+      <div id="badgePreview">
+        <img id="badgeImage" src="" alt="Badge Image" style="display: none;" />
+        <p id="badgeDescription" style="display: none;"></p>
+      </div>
 
-  <esp-web-install-button id="flashButton" style="display: none;"></esp-web-install-button>
+      <esp-web-install-button id="flashButton" style="display: none;"></esp-web-install-button>
+    </div>
+  </main>
+
+  <footer>
+    <span class="footer-text">⚡️ PCB art, pirate spirit. Arrr! &copy; 2025 BadgePirates</span>
+  </footer>
 
   <script type="module" src="https://unpkg.com/esp-web-tools@9.0.3/dist/web/install-button.js?module"></script>
 </body>
