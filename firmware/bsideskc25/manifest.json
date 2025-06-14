@@ -5,7 +5,9 @@
     {
       "chipFamily": "ESP32-S3",
       "parts": [
-        { "path": "https://badgepirates-firmware.s3.us-east-1.amazonaws.com/bsideskc25/firmware.bin", "offset": 65536 }
+        { "path": "http://localhost:8080/firmware/bsideskc25/bootloader.bin", "offset": 0 },
+        { "path": "http://localhost:8080/firmware/bsideskc25/partitions.bin", "offset": 32768 },
+        { "path": "http://localhost:8080/firmware/bsideskc25/firmware.bin", "offset": 65536 }
       ]
     }
   ]
