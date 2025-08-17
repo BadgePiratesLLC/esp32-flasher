@@ -1,0 +1,14 @@
+{
+  "name": "Meshtastic Heltek V3 - SecKC Edition",
+  "version": "1.0.0",
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "http://localhost:8080/firmware/meshtastic-HeltekV3-SecKC-Edition/bootloader.bin", "offset": "0x0" },
+        { "path": "http://localhost:8080/firmware/meshtastic-HeltekV3-SecKC-Edition/partitions.bin", "offset": "0x8000" },
+        { "path": "http://localhost:8080/firmware/meshtastic-HeltekV3-SecKC-Edition/firmware.bin", "offset": "0x10000" }
+      ]
+    }
+  ]
+}
