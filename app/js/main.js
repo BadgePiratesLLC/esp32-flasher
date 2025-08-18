@@ -4,7 +4,8 @@ const flashButton = document.getElementById('flashButton');
 const badgeDescriptions = {
   basicQACode25: "For QA of the base baord",
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
-  bsideskc25: "BSidesKC 2025 badge: Available after the event"
+  bsideskc25: "BSidesKC 2025 badge: Available after the event",
+  meshtastic: "Meshtastic badge: Available after the event"
 };
 // Map of badge to manifest URLs (switch between S3 and localhost for local testing)
 const useLocalhost = window.location.hostname === "localhost";
@@ -18,13 +19,17 @@ const manifestUrls = {
     : "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
   bsideskc25: useLocalhost
     ? `http://localhost:${localPort}/firmware/bsideskc25/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json"
+    : "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json",
+  meshtastic: useLocalhost
+    ? `http://localhost:${localPort}/firmware/meshtastic-HeltekV3-SecKC-Edition/manifest.json`
+    : "https://badgepirates-firmware.s3.amazonaws.com/meshtastic-Hv3-SKC/manifest.json"
 };
 
 const badgeImages = {
   basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/badge.jpg",
   cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
-  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg"
+  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg",
+  meshtastic: "https://heltec.org/wp-content/uploads/2022/10/LORA320-V3.png"
 };
 
 badgeSelect.addEventListener('change', () => {
