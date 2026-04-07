@@ -1,209 +1,195 @@
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg-0: #080808;
+  --bg-1: #0f0f0f;
+  --bg-2: #161616;
+  --bg-3: #1e1e1e;
+  --accent: #00aaff;
+  --accent-dim: #0077bb;
+  --accent-glow: rgba(0, 170, 255, 0.15);
+  --gold: #f0a500;
+  --text-0: #ffffff;
+  --text-1: #cccccc;
+  --text-2: #888888;
+  --border: rgba(255,255,255,0.07);
+  --radius: 8px;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --transition: 0.2s ease;
+}
+
+html { scroll-behavior: smooth; }
 body {
-  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(120deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-  color: #fff;
-  margin: 0;
-  padding: 0;
+  font-family: var(--font-body);
+  background: var(--bg-0);
+  color: var(--text-1);
   min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
-  background:
-    repeating-linear-gradient(135deg, #00ffd533 0 2px, transparent 2px 40px),
-    repeating-linear-gradient(225deg, #00ffd511 0 2px, transparent 2px 40px);
-  background-size: 40px 40px, 40px 40px;
-  background-repeat: repeat;
-  pointer-events: none;
-  animation: bgmove 8s linear infinite;
-}
-
-@keyframes bgmove {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 40px 40px, 40px 40px; }
-}
-
-.pirate-header {
-  position: relative;
-  z-index: 1;
-  padding: 2em 0 1em 0;
-  background: transparent;
-  text-align: center;
-}
-.pirate-logo {
-  font-size: 3em;
-  margin-bottom: 0.2em;
-  filter: drop-shadow(0 0 8px #00ffd5cc);
-}
-.pirate-header h1 {
-  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2.8em;
-  color: #00ffd5;
-  letter-spacing: 0.08em;
-  margin: 0;
-  text-shadow: 0 0 16px #00ffd5aa, 0 0 2px #fff;
-}
-.subtitle {
-  font-size: 1.2em;
-  color: #fff;
-  margin-top: 0.3em;
-  margin-bottom: 0.5em;
-  opacity: 0.85;
-  letter-spacing: 0.04em;
-}
-
-main {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Header ───────────────────────────────────────────────── */
+.site-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,8,8,0.85);
+  backdrop-filter: blur(12px);
+}
+
+.logo-link {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-0);
+}
+
+.accent { color: var(--accent); }
+
+/* ── Section Tag ──────────────────────────────────────────── */
+.section-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+/* ── Main / Card ──────────────────────────────────────────── */
+main {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
-  z-index: 1;
-  position: relative;
+  padding: 48px 24px;
 }
 
-.badge-card {
-  background: rgba(20, 30, 40, 0.92);
-  border-radius: 18px;
-  box-shadow: 0 0 32px #00ffd555, 0 2px 8px #000a;
-  padding: 2.5em 2em 2em 2em;
-  margin-top: 2em;
-  max-width: 350px;
+.flasher-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px 36px;
   width: 100%;
+  max-width: 480px;
   text-align: center;
-  border: 2px solid #00ffd5cc;
-  position: relative;
 }
 
-label, select {
-  font-size: 1.2em;
-  margin-top: 1.5em;
+.flasher-card h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text-0);
+  margin-bottom: 10px;
+}
+
+.card-sub {
+  color: var(--text-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* ── Field Group ──────────────────────────────────────────── */
+.field-group {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.field-group label {
   display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 8px;
 }
 
-select {
-  padding: 12px;
-  border-radius: 10px;
-  background: #111;
-  color: #00ffd5;
-  border: 2px solid #00ffd5cc;
-  margin: 0.5em auto 1.2em auto;
-  width: 90%;
-  font-family: inherit;
-  font-size: 1.1em;
-  box-shadow: 0 0 8px #00ffd555;
-  transition: border 0.2s, box-shadow 0.2s;
+.field-group select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  color: var(--text-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
-select:focus {
+
+.field-group select:focus {
   outline: none;
-  border: 2px solid #fff;
-  box-shadow: 0 0 16px #00ffd5cc;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* ── Badge Preview ────────────────────────────────────────── */
 #badgePreview {
-  margin: 20px auto 0 auto;
-  max-width: 300px;
+  margin-bottom: 24px;
 }
 
 #badgeImage {
   width: 100%;
-  border-radius: 14px;
-  box-shadow: 0 0 24px #00ffd5cc, 0 2px 8px #000a;
-  margin-bottom: 0.7em;
-  border: 2px solid #00ffd5cc;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
 }
 
 #badgeDescription {
-  font-size: 1.1em;
-  color: #fff;
-  margin-bottom: 0.5em;
-  text-shadow: 0 0 4px #00ffd5aa;
+  font-size: 0.9rem;
+  color: var(--text-2);
 }
 
+/* ── Flash Button ─────────────────────────────────────────── */
 esp-web-install-button {
-  margin-top: 1.5em;
-  font-size: 1.1em;
-  background: linear-gradient(90deg, #00ffd5 60%, #2c5364 100%);
-  border-radius: 10px;
+  display: inline-flex;
+  margin-top: 8px;
+}
+
+esp-web-install-button::part(button) {
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
   padding: 12px 28px;
-  color: #000;
-  box-shadow: 0 0 16px #00ffd599;
-  cursor: pointer;
+  border-radius: var(--radius);
   border: none;
-  font-weight: bold;
-  letter-spacing: 0.04em;
-  transition: filter 0.2s, box-shadow 0.2s;
-}
-esp-web-install-button:hover {
-  filter: brightness(1.15) drop-shadow(0 0 8px #00ffd5cc);
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
+esp-web-install-button::part(button):hover {
+  background: #33bbff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,170,255,0.3);
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
 footer {
-  width: 100%;
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
   text-align: center;
-  padding: 1.5em 0 1em 0;
-  background: transparent;
-  color: #00ffd5;
-  font-size: 1.1em;
-  letter-spacing: 0.04em;
-  z-index: 1;
-  position: relative;
-}
-.footer-text {
-  opacity: 0.7;
 }
 
-h1 {
-  font-size: 2.2em;
-  margin-top: 1em;
-  color: #00ffd5;
-  text-shadow: 0 0 8px #00ffd5aa;
-}
-
-label, select {
-  font-size: 1.2em;
-  margin-top: 1.5em;
-  display: block;
-}
-
-select {
-  padding: 10px;
-  border-radius: 8px;
-  background: #fff;
-  color: #000;
-  border: none;
-  margin: 0.5em auto;
-  width: 250px;
-}
-
-#badgePreview {
-  margin: 20px auto;
-  max-width: 300px;
-}
-
-#badgeImage {
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #00ffd5aa;
-}
-
-esp-web-install-button {
-  margin-top: 1.5em;
-  font-size: 1.1em;
-  background-color: #00ffd5;
-  border-radius: 8px;
-  padding: 10px 20px;
-  color: #000;
-  box-shadow: 0 0 10px #00ffd599;
-  cursor: pointer;
-}
-
-esp-web-install-button:hover {
-  filter: brightness(1.1);
+.footer-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--text-2);
 }

@@ -1,28 +1,38 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="style.css">
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ESP32 Badge Firmware Flasher</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firmware Flasher — Badge Pirates</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="https://unpkg.com/esp-web-tools@9.0.3/dist/web/install-button.js?module"></script>
 </head>
 <body>
-  <header class="pirate-header">
-    <div class="pirate-logo">🏴‍☠️</div>
-    <h1>BadgePirates</h1>
-    <p class="subtitle">We make badges for fun and no profit</p>
+
+  <header class="site-header">
+    <a href="https://badgepirates.com" class="logo-link">
+      Badge<span class="accent">Pirates</span>
+    </a>
   </header>
 
   <main>
-    <div class="badge-card">
-      <label for="badgeSelect">Select Badge:</label>
-      <select id="badgeSelect">
-        <option value="">-- Choose Badge --</option>
-        <option value="basicQACode25">2025 Basic QA Code</option>
-        <option value="cactuscon2025">CactusCon 2025</option>
-        <option value="bsideskc25">BSidesKC 25</option>
-      </select>
+    <div class="flasher-card">
+      <div class="section-tag">Firmware Flasher</div>
+      <h1>Flash Your Badge</h1>
+      <p class="card-sub">Select your badge, connect via USB, and flash the latest firmware directly from your browser.</p>
+
+      <div class="field-group">
+        <label for="badgeSelect">Select Badge</label>
+        <select id="badgeSelect">
+          <option value="">-- Choose Badge --</option>
+          <option value="basicQACode25">2025 Basic QA Code</option>
+          <option value="cactuscon2025">CactusCon 2025</option>
+          <option value="bsideskc25">BSidesKC 25</option>
+        </select>
+      </div>
 
       <div id="badgePreview">
         <img id="badgeImage" src="" alt="Badge Image" style="display: none;" />
@@ -34,9 +44,8 @@
   </main>
 
   <footer>
-    <span class="footer-text">⚡️ PCB art, pirate spirit. Arrr! &copy; 2025 BadgePirates</span>
+    <span class="footer-mono">© 2025 BadgePirates LLC — Making badges for fun and no profit</span>
   </footer>
 
-  <script type="module" src="https://unpkg.com/esp-web-tools@9.0.3/dist/web/install-button.js?module"></script>
 </body>
 </html>
