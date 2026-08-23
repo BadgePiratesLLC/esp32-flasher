@@ -4,7 +4,8 @@ const flashButton = document.getElementById('flashButton');
 const badgeDescriptions = {
   basicQACode25: "For QA of the base baord",
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
-  bsideskc25: "BSidesKC 2025 badge: Available after the event"
+  bsideskc25: "BSidesKC 2025 badge: Available after the event",
+  wifiMarauder: "ESP32Marauder port for the BSidesKC ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)"
 };
 // Map of badge to manifest URLs (switch between S3 and localhost for local testing)
 const useLocalhost = window.location.hostname === "localhost";
@@ -18,13 +19,17 @@ const manifestUrls = {
     : "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
   bsideskc25: useLocalhost
     ? `http://localhost:${localPort}/firmware/bsideskc25/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json"
+    : "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json",
+  wifiMarauder: useLocalhost
+    ? `http://localhost:${localPort}/firmware/wifiMarauder/manifest.json`
+    : "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/manifest.json"
 };
 
 const badgeImages = {
   basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/badge.jpg",
   cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
-  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg"
+  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg",
+  wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/badge.jpg"
 };
 
 // esp-web-tools has no visibility into the target's burned-in partition table — it
@@ -42,7 +47,10 @@ const APP_SLOT_MAX_BYTES = {
   cactuscon2025: 1310720,
   // bsideskc25 ships bootloader+partition-table+app and uses a 16MB flash layout
   // (app0/app1 = 0x640000 each) — no slot-size risk from this check today.
-  bsideskc25: 6553600
+  bsideskc25: 6553600,
+  // wifiMarauder: default_8MB.csv app0 slot (0x10000..0x340000). Built firmware.bin
+  // is ~1.44MB against a 3,342,336B (0x330000) ceiling — comfortable margin.
+  wifiMarauder: 3342336
 };
 
 let badgeReady = false;
