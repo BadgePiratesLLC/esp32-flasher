@@ -139,6 +139,17 @@ main {
   color: var(--text-2);
 }
 
+#badgeCompatNote {
+  font-size: 0.85rem;
+  color: #d9a441;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(217, 164, 65, 0.4);
+  border-radius: var(--radius);
+  background: rgba(217, 164, 65, 0.08);
+  text-align: left;
+}
+
 /* ── Flash Button ─────────────────────────────────────────── */
 esp-web-install-button {
   display: inline-flex;

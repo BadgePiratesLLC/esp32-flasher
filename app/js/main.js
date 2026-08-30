@@ -5,31 +5,42 @@ const badgeDescriptions = {
   basicQACode25: "For QA of the base baord",
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
   bsideskc25: "BSidesKC 2025 badge: Available after the event",
-  wifiMarauder: "ESP32Marauder port for the BSidesKC ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)"
+  wifiMarauder: "ESP32Marauder port for the BadgePirates ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)",
+  qacode27: "BadgePirates QA test badge — the current-generation hardware rig, LoRa range-test kit included",
+  bsideskc26: "Official badge for BSidesKC 2026"
 };
-// Map of badge to manifest URLs (switch between S3 and localhost for local testing)
-const useLocalhost = window.location.hostname === "localhost";
-const localPort = 8080;
+
+// Per-badge hardware caveats shown in their own callout, separate from the
+// one-line description above — a warning buried in a description reads as
+// flavor text, not a "your screen will stay blank" fact (Nexus ad948451/
+// d0e8e075). Leave a key out (or empty string) for badges with nothing to flag.
+const badgeCompatNotes = {
+  wifiMarauder: "Built for CC14 / BSidesKC26 hardware. Hardware-compatible with CC13 / BSidesKC25 badges too, " +
+    "but the display will not work on those — the screen moved from the front of the board to the back that " +
+    "generation, so the panel is physically inverted relative to what this firmware expects. WiFi, BLE, and the " +
+    "buttons still work; a display fix for CC13/BSidesKC25 is planned but not yet written."
+};
+// Always S3 — there used to be a parallel localhost:8080/firmware/ fixture
+// for local dev, but it silently rotted (last touched 2026-04-07) while S3
+// kept moving, and its staleness is exactly what made a from-disk audit of
+// firmware.badgepirates.com report 3 of 4 options as broken when production
+// (this file, live) was fine (Nexus ad948451). One source of truth.
 const manifestUrls = {
-  basicQACode25: useLocalhost
-    ? `http://localhost:${localPort}/firmware/basicQACode25/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/manifest.json",
-  cactuscon2025: useLocalhost
-    ? `http://localhost:${localPort}/firmware/cactuscon2025/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
-  bsideskc25: useLocalhost
-    ? `http://localhost:${localPort}/firmware/bsideskc25/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json",
-  wifiMarauder: useLocalhost
-    ? `http://localhost:${localPort}/firmware/wifiMarauder/manifest.json`
-    : "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/manifest.json"
+  basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/manifest.json",
+  cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
+  bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json",
+  wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/manifest.json",
+  qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/manifest.json",
+  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/manifest.json"
 };
 
 const badgeImages = {
   basicQACode25: "https://badgepirates-firmware.s3.amazonaws.com/basicQACode25/badge.jpg",
   cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
   bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg",
-  wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/badge.jpg"
+  wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/badge.jpg",
+  qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg",
+  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/badge.jpg"
 };
 
 // esp-web-tools has no visibility into the target's burned-in partition table — it
@@ -50,7 +61,16 @@ const APP_SLOT_MAX_BYTES = {
   bsideskc25: 6553600,
   // wifiMarauder: default_8MB.csv app0 slot (0x10000..0x340000). Built firmware.bin
   // is ~1.44MB against a 3,342,336B (0x330000) ceiling — comfortable margin.
-  wifiMarauder: 3342336
+  wifiMarauder: 3342336,
+  // qacode27: bp_cc15_n16r2 board (16MB flash, 2MB PSRAM), default_16MB.csv
+  // app0/app1 = 0x640000 each — same layout as bsideskc25.
+  qacode27: 6553600,
+  // bsideskc26: same default_8MB.csv-style app0 slot as wifiMarauder even
+  // though the underlying board_build.flash_size is set to 16MB — the repo
+  // doesn't override board_build.partitions, so PlatformIO still picks the
+  // 8MB-family table. Real chip is bigger, so this only wastes headroom, it
+  // doesn't risk an oversized write.
+  bsideskc26: 3342336
 };
 
 let badgeReady = false;
@@ -63,6 +83,7 @@ badgeSelect.addEventListener('change', () => {
   if (!selected) {
     badgeImage.style.display = 'none';
     badgeDescription.style.display = 'none';
+    badgeCompatNote.style.display = 'none';
     return;
   }
 
@@ -71,6 +92,14 @@ badgeSelect.addEventListener('change', () => {
 
   badgeDescription.innerText = badgeDescriptions[selected] || "";
   badgeDescription.style.display = 'block';
+
+  const compatNote = badgeCompatNotes[selected];
+  if (compatNote) {
+    badgeCompatNote.innerText = `⚠ ${compatNote}`;
+    badgeCompatNote.style.display = 'block';
+  } else {
+    badgeCompatNote.style.display = 'none';
+  }
 
   checkFirmwareFits(selected);
 });
