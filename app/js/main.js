@@ -6,6 +6,7 @@ const badgeDescriptions = {
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
   bsideskc25: "BSidesKC 2025 badge: Available after the event",
   wifiMarauder: "ESP32Marauder port for the BadgePirates ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)",
+  wifiMarauderCC13: "ESP32Marauder port for CC13 / BSidesKC25 hardware — same WiFi/BLE/pentest tools as the CC14 build, with a display/touch orientation fix for the earlier badge revision (v1.1.0)",
   qacode27: "BadgePirates QA test badge — the current-generation hardware rig, LoRa range-test kit included",
   bsideskc26: "Official badge for BSidesKC 2026"
 };
@@ -15,10 +16,13 @@ const badgeDescriptions = {
 // flavor text, not a "your screen will stay blank" fact (Nexus ad948451/
 // d0e8e075). Leave a key out (or empty string) for badges with nothing to flag.
 const badgeCompatNotes = {
-  wifiMarauder: "Built for CC14 / BSidesKC26 hardware. Hardware-compatible with CC13 / BSidesKC25 badges too, " +
-    "but the display will not work on those — the screen moved from the front of the board to the back that " +
-    "generation, so the panel is physically inverted relative to what this firmware expects. WiFi, BLE, and the " +
-    "buttons still work; a display fix for CC13/BSidesKC25 is planned but not yet written."
+  wifiMarauder: "Built for CC14 / BSidesKC26 hardware only. On CC13 / BSidesKC25 badges the display will be " +
+    "upside-down and touch will be mirrored — use the separate \"WiFi Marauder (CC13 / BSidesKC25)\" entry instead.",
+  wifiMarauderCC13: "Built for CC13 / BSidesKC25 hardware — 180-degree display flip and mirrored touch to correct " +
+    "for that generation's panel orientation. The touch-mirroring formula was derived from upstream's rotation-3 " +
+    "math, not yet confirmed on physical hardware — display fix implemented, pending physical validation " +
+    "(Nexus 2977d950). WiFi, BLE, and the buttons are unaffected. Use the plain \"WiFi Marauder\" entry for CC14 / " +
+    "BSidesKC26 badges instead."
 };
 // Always S3 — there used to be a parallel localhost:8080/firmware/ fixture
 // for local dev, but it silently rotted (last touched 2026-04-07) while S3
@@ -30,6 +34,7 @@ const manifestUrls = {
   cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/manifest.json",
   bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/manifest.json",
   wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/manifest.json",
+  wifiMarauderCC13: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauderCC13/manifest.json",
   qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/manifest.json",
   bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/manifest.json"
 };
@@ -39,6 +44,7 @@ const badgeImages = {
   cactuscon2025: "https://badgepirates-firmware.s3.amazonaws.com/cactuscon2025/badge.jpg",
   bsideskc25: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc25/badge.jpg",
   wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/badge.jpg",
+  wifiMarauderCC13: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauderCC13/badge.jpg",
   qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg",
   bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/badge.jpg"
 };
@@ -62,6 +68,10 @@ const APP_SLOT_MAX_BYTES = {
   // wifiMarauder: default_8MB.csv app0 slot (0x10000..0x340000). Built firmware.bin
   // is ~1.44MB against a 3,342,336B (0x330000) ceiling — comfortable margin.
   wifiMarauder: 3342336,
+  // wifiMarauderCC13: env:bsideskc-badge-cc13 extends env:bsideskc-badge and
+  // inherits the same default_8MB.csv app0 slot — confirmed from this build's
+  // own size report (1,451,293B used against 3,342,336B ceiling).
+  wifiMarauderCC13: 3342336,
   // qacode27: bp_cc15_n16r2 board (16MB flash, 2MB PSRAM), default_16MB.csv
   // app0/app1 = 0x640000 each — same layout as bsideskc25.
   qacode27: 6553600,
