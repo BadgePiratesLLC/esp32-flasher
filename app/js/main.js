@@ -8,7 +8,8 @@ const badgeDescriptions = {
   wifiMarauder: "ESP32Marauder port for the BadgePirates ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)",
   wifiMarauderCC13: "ESP32Marauder port for CC13 / BSidesKC25 hardware — same WiFi/BLE/pentest tools as the CC14 build, with a display/touch orientation fix for the earlier badge revision (v1.1.0)",
   qacode27: "BadgePirates QA test badge — the current-generation hardware rig, LoRa range-test kit included",
-  bsideskc26: "Official badge for BSidesKC 2026"
+  bsideskc26: "Official badge for BSidesKC 2026",
+  deskConsole: "Badge Desk Console — app framework + token/spend meter, buyer Wi-Fi provisioning via captive portal, OTA update check on boot (Nexus 7ea89cbf/71d79183)"
 };
 
 // Per-badge hardware caveats shown in their own callout, separate from the
@@ -22,7 +23,11 @@ const badgeCompatNotes = {
     "for that generation's panel orientation. The touch-mirroring formula was derived from upstream's rotation-3 " +
     "math, not yet confirmed on physical hardware — display fix implemented, pending physical validation " +
     "(Nexus 2977d950). WiFi, BLE, and the buttons are unaffected. Use the plain \"WiFi Marauder\" entry for CC14 / " +
-    "BSidesKC26 badges instead."
+    "BSidesKC26 badges instead.",
+  deskConsole: "Same bp_cc15_n16r2 board/HAL as the QA Test Badge but a different product (console_main.cpp, " +
+    "not the QA self-test firmware) — do not confuse the two even though they share hardware. Browser-flash " +
+    "over WebSerial has not yet been confirmed on a physical unit (Nexus 71d79183 AC6) — build is hash-verified " +
+    "via serial/esptool, not yet proven from this page."
 };
 // Always S3 — there used to be a parallel localhost:8080/firmware/ fixture
 // for local dev, but it silently rotted (last touched 2026-04-07) while S3
@@ -36,7 +41,8 @@ const manifestUrls = {
   wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/manifest.json",
   wifiMarauderCC13: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauderCC13/manifest.json",
   qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/manifest.json",
-  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/manifest.json"
+  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/manifest.json",
+  deskConsole: "https://badgepirates-firmware.s3.amazonaws.com/deskConsole/manifest.json"
 };
 
 const badgeImages = {
@@ -46,7 +52,10 @@ const badgeImages = {
   wifiMarauder: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauder/badge.jpg",
   wifiMarauderCC13: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauderCC13/badge.jpg",
   qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg",
-  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/badge.jpg"
+  bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/badge.jpg",
+  // No desk-console-specific product photo yet — same physical board as
+  // qacode27, so its photo is an accurate stand-in until a real one is shot.
+  deskConsole: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg"
 };
 
 // esp-web-tools has no visibility into the target's burned-in partition table — it
@@ -80,7 +89,11 @@ const APP_SLOT_MAX_BYTES = {
   // doesn't override board_build.partitions, so PlatformIO still picks the
   // 8MB-family table. Real chip is bigger, so this only wastes headroom, it
   // doesn't risk an oversized write.
-  bsideskc26: 3342336
+  bsideskc26: 3342336,
+  // deskConsole: same bp_cc15_n16r2 board as qacode27, same default_16MB.csv
+  // app0/app1 = 0x640000 slot — confirmed from this build's own PlatformIO
+  // size report (1,424,848B used, Nexus 71d79183).
+  deskConsole: 6553600
 };
 
 let badgeReady = false;
