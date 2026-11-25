@@ -5,11 +5,11 @@ const badgeDescriptions = {
   basicQACode25: "For QA of the base baord",
   cactuscon2025: "Official badge for CactusCon 2025, featuring ESP32-s3",
   bsideskc25: "BSidesKC 2025 badge: Available after the event",
-  wifiMarauder: "ESP32Marauder port for the BadgePirates ESP32-S3 badge — WiFi/BLE scanning and pentest tools (v1.1.0)",
-  wifiMarauderCC13: "ESP32Marauder port for CC13 / BSidesKC25 hardware — same WiFi/BLE/pentest tools as the CC14 build, with a display/touch orientation fix for the earlier badge revision (v1.1.0)",
-  qacode27: "BadgePirates QA test badge — the current-generation hardware rig, LoRa range-test kit included",
+  wifiMarauder: "ESP32Marauder port for the BadgePirates ESP32-S3 badge: WiFi/BLE scanning and pentest tools (v1.1.0)",
+  wifiMarauderCC13: "ESP32Marauder port for CC13 / BSidesKC25 hardware: same WiFi/BLE/pentest tools as the CC14 build, with a display/touch orientation fix for the earlier badge revision (v1.1.0)",
+  qacode27: "BadgePirates QA test badge: the current-generation hardware rig, LoRa range-test kit included",
   bsideskc26: "Official badge for BSidesKC 2026",
-  deskConsole: "Badge Desk Console — app framework + token/spend meter, buyer Wi-Fi provisioning via captive portal, OTA update check on boot (Nexus 7ea89cbf/71d79183)"
+  deskConsole: "A small screen for your desk. Pairs with free host software on your computer to show live cards you choose: AI usage and spend, stock prices, weather, sports scores, smart-home status, and more. Guided Wi-Fi setup walks you through connecting it, and it checks for firmware updates on its own."
 };
 
 // Per-badge hardware caveats shown in their own callout, separate from the
@@ -18,16 +18,15 @@ const badgeDescriptions = {
 // d0e8e075). Leave a key out (or empty string) for badges with nothing to flag.
 const badgeCompatNotes = {
   wifiMarauder: "Built for CC14 / BSidesKC26 hardware only. On CC13 / BSidesKC25 badges the display will be " +
-    "upside-down and touch will be mirrored — use the separate \"WiFi Marauder (CC13 / BSidesKC25)\" entry instead.",
-  wifiMarauderCC13: "Built for CC13 / BSidesKC25 hardware — 180-degree display flip and mirrored touch to correct " +
-    "for that generation's panel orientation. The touch-mirroring formula was derived from upstream's rotation-3 " +
-    "math, not yet confirmed on physical hardware — display fix implemented, pending physical validation " +
-    "(Nexus 2977d950). WiFi, BLE, and the buttons are unaffected. Use the plain \"WiFi Marauder\" entry for CC14 / " +
-    "BSidesKC26 badges instead.",
-  deskConsole: "Same bp_cc15_n16r2 board/HAL as the QA Test Badge but a different product (console_main.cpp, " +
-    "not the QA self-test firmware) — do not confuse the two even though they share hardware. Browser-flash " +
-    "over WebSerial has not yet been confirmed on a physical unit (Nexus 71d79183 AC6) — build is hash-verified " +
-    "via serial/esptool, not yet proven from this page."
+    "upside-down and touch will be mirrored; use the separate \"WiFi Marauder (CC13 / BSidesKC25)\" entry instead.",
+  wifiMarauderCC13: "Built for CC13 / BSidesKC25 hardware: includes a 180-degree display flip and mirrored touch " +
+    "to correct for that generation's panel orientation. The touch-mirroring fix hasn't been confirmed on physical " +
+    "hardware yet; the display flip is implemented but still pending real-world testing. WiFi, BLE, and the " +
+    "buttons are unaffected. Use the plain \"WiFi Marauder\" entry for CC14 / BSidesKC26 badges instead.",
+  deskConsole: "Uses the same circuit board as our QA Test Badge, but it's different firmware for a different " +
+    "product. Don't flash this image onto a QA Test Badge, or the QA Test Badge image onto this one, even though " +
+    "they share hardware. Flashing over the browser (WebSerial) from this page hasn't been confirmed yet on a " +
+    "physical unit, though the firmware build itself has been verified."
 };
 // Always S3 — there used to be a parallel localhost:8080/firmware/ fixture
 // for local dev, but it silently rotted (last touched 2026-04-07) while S3
@@ -53,9 +52,7 @@ const badgeImages = {
   wifiMarauderCC13: "https://badgepirates-firmware.s3.amazonaws.com/wifiMarauderCC13/badge.jpg",
   qacode27: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg",
   bsideskc26: "https://badgepirates-firmware.s3.amazonaws.com/bsideskc26/badge.jpg",
-  // No desk-console-specific product photo yet — same physical board as
-  // qacode27, so its photo is an accurate stand-in until a real one is shot.
-  deskConsole: "https://badgepirates-firmware.s3.amazonaws.com/qacode27/badge.jpg"
+  deskConsole: "https://badgepirates-firmware.s3.amazonaws.com/deskConsole/badge.jpg"
 };
 
 // esp-web-tools has no visibility into the target's burned-in partition table — it
@@ -131,38 +128,64 @@ async function checkFirmwareFits(badgeKey) {
   const manifestUrl = manifestUrls[badgeKey];
   const limit = APP_SLOT_MAX_BYTES[badgeKey];
 
+  let manifest;
   try {
     const manifestResp = await fetch(manifestUrl);
     if (!manifestResp.ok) {
       throw new Error(`manifest fetch failed: HTTP ${manifestResp.status}`);
     }
-    const manifest = await manifestResp.json();
-    const parts = manifest.builds?.[0]?.parts || [];
-
-    for (const part of parts) {
-      const headResp = await fetch(part.path, { method: 'HEAD' });
-      if (!headResp.ok) {
-        throw new Error(`binary fetch failed: HTTP ${headResp.status} for ${part.path}`);
-      }
-      const size = parseInt(headResp.headers.get('content-length'), 10);
-      if (limit && !Number.isNaN(size) && size > limit) {
-        throw new Error(
-          `Firmware image (${size.toLocaleString()} B) at offset 0x${part.offset.toString(16)} ` +
-          `is larger than this badge's flash partition (${limit.toLocaleString()} B). ` +
-          `Flashing would brick the badge — this build needs to be fixed before it can be flashed. ` +
-          `Reported to #firmware — do not proceed with a manual esptool flash of this file either.`
-        );
-      }
-    }
-
-    badgeReady = true;
-    flashButton.manifest = manifestUrl;
-    flashButton.style.display = 'inline-block';
+    manifest = await manifestResp.json();
   } catch (err) {
     badgeReady = false;
     flashButton.style.display = 'none';
     showFlasherError(badgeKey, err.message);
+    return;
   }
+
+  const parts = manifest.builds?.[0]?.parts || [];
+
+  // A GET with a 1-byte Range is the size precheck, not HEAD: S3 (and most
+  // CDNs) only ever CORS-cleared GET, so a HEAD request gets no
+  // Access-Control-Allow-Origin on its response and the browser blocks it
+  // outright, taking down the whole flasher before Install even shows up
+  // (Nexus 07f29487). This check is a safety net on top of the real flash,
+  // not a gate on it, so any failure here just logs a warning and lets
+  // Install proceed instead of blocking the badge entirely.
+  for (const part of parts) {
+    try {
+      const rangeResp = await fetch(part.path, { headers: { Range: 'bytes=0-0' } });
+      if (!rangeResp.ok) {
+        throw new Error(`size check failed: HTTP ${rangeResp.status} for ${part.path}`);
+      }
+
+      let size = NaN;
+      const contentRange = rangeResp.headers.get('content-range'); // "bytes 0-0/12345"
+      const match = contentRange && contentRange.match(/\/(\d+)$/);
+      if (match) {
+        size = parseInt(match[1], 10);
+      } else {
+        size = parseInt(rangeResp.headers.get('content-length'), 10);
+      }
+
+      if (limit && !Number.isNaN(size) && size > limit) {
+        showFlasherError(badgeKey,
+          `Firmware image (${size.toLocaleString()} B) at offset 0x${part.offset.toString(16)} ` +
+          `is larger than this badge's flash partition (${limit.toLocaleString()} B). ` +
+          `Flashing would brick the badge. This build needs to be fixed before it can be flashed. ` +
+          `Reported to #firmware; do not proceed with a manual esptool flash of this file either.`
+        );
+        badgeReady = false;
+        flashButton.style.display = 'none';
+        return;
+      }
+    } catch (err) {
+      console.warn(`[flasher] size precheck skipped for ${part.path}: ${err.message}`);
+    }
+  }
+
+  badgeReady = true;
+  flashButton.manifest = manifestUrl;
+  flashButton.style.display = 'inline-block';
 }
 
 function showFlasherError(badgeKey, message) {
